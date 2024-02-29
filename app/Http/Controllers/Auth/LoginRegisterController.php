@@ -108,9 +108,14 @@ class LoginRegisterController extends Controller
                 ]
             );
             ActivityLogController::activtyLog($user, 'login', 'The user has logged in');
-
-            return redirect()->route('dashboard')
+            if($role->name =="pelanggan"){
+                return redirect()->route('beranda')
                 ->withSuccess('You have successfully logged in!');
+            }
+            else{
+                return redirect()->route('dashboard')
+                ->withSuccess('You have successfully logged in!');
+            }
         }
 
         return back()->withErrors([

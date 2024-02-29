@@ -54,6 +54,12 @@ class User extends Authenticatable
 
         return $query;
     }
+    public function produks()
+    {
+        return $this->belongsToMany(Produk::class, 'keranjang_details','user_id','produk_id')
+                    ->withPivot('quantity', 'sub_total', 'order_id', 'status')
+                    ->withTimestamps();
+    }
     public static function get_dataIsActive($param = null){
         $data =  Self::query()->where('is_active',$param)->get();
 

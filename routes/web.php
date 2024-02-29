@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginRegisterController;
+use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\CobaMenuController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormSurveyController;
 use App\Http\Controllers\JobHistoryController;
+use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OpdController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RoleController;
@@ -25,9 +28,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 Route::controller(LoginRegisterController::class)->group(function() {
     Route::get('/register', 'register')->name('register');
     Route::post('/store', 'store')->name('store');
@@ -36,7 +39,25 @@ Route::controller(LoginRegisterController::class)->group(function() {
     Route::get('/dashboard', 'dashboard')->name('dashboard');
     Route::post('/logout', 'logout')->name('logout');
 });
-Route::group(['middleware' => ['auth']], function () {
+// Route::group(['middleware' => ['auth']], function () {
+Route::group(["middleware" => ['auth', 'checkuserrole:pelanggan']], function () {
+    Route::controller(BerandaController::class)->group(function() {
+        Route::get('/', 'index')->name('beranda');
+    });
+    Route::controller(KeranjangController::class)->group(function() {
+        Route::get('/keranjang/{param}', 'index')->name('keranjang.index');
+        Route::put('/keranjang/addToCart/{param}', 'addToCart')->name('keranjang.addToCart');
+        Route::put('/keranjang/updateQuantityCart/{param}', 'updateQuantityCart')->name('keranjang.updateQuantityCart');
+        Route::delete('/keranjang/removeProductCart/{param}', 'removeProductCart')->name('keranjang.removeProductCart');
+        Route::post('/keranjang/checkout', 'checkout')->name('keranjang.checkout');
+    });
+    Route::controller(OrderController::class)->group(function() {
+        Route::get('/order', 'index')->name('order.index');
+        Route::get('/order/detailCheckout/{param}', 'detailCheckout')->name('order.detailCheckout');
+    });
+});
+
+Route::group(["middleware" => ['auth', 'checkuserrole:superadmin,pegawai']], function () {
     Route::controller(DashboardController::class)->group(function() {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
     });
