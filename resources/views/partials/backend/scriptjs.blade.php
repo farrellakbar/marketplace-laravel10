@@ -1,0 +1,40 @@
+    <!-- Start js -->
+        <script src="{{ asset('/') }}assets/js/jquery.min.js"></script>
+        <script src="{{ asset('/') }}assets/js/popper.min.js"></script>
+        <script src="{{ asset('/') }}assets/js/bootstrap.bundle.js"></script>
+
+        <script src="{{ asset('/') }}assets/js/modernizr.min.js"></script>
+        <script src="{{ asset('/') }}assets/js/detect.js"></script>
+        <script src="{{ asset('/') }}assets/js/jquery.slimscroll.js"></script>
+        <script src="{{ asset('/') }}assets/js/horizontal-menu.js"></script>
+        <!-- Switchery js -->
+        <script src="{{ asset('/') }}assets/plugins/switchery/switchery.min.js"></script>
+        <!-- Sweet-Alert js -->
+         <script src="{{ asset('/') }}assets/plugins/sweet-alert2/sweetalert2.min.js"></script>
+         <!-- Select2 js -->
+        <script src="{{ asset('/') }}assets/plugins/select2/select2.min.js"></script>
+        <!-- Select2 js -->
+        <script src="{{ asset('/') }}assets/plugins/select2/select2.min.js"></script>
+        <!-- Tagsinput js -->
+        <script src="{{ asset('/') }}assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+        <script src="{{ asset('/') }}assets/plugins/bootstrap-tagsinput/typeahead.bundle.js"></script>
+        <script src="{{ asset('/') }}assets/js/custom/custom-form-select.js"></script>
+        <!-- Required datatable js -->
+        <script src="{{ asset('/') }}assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <!-- Buttons examples -->
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/jszip/jszip.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/pdfmake/build/pdfmake.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/pdfmake/build/vfs_fonts.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+        <!-- Responsive examples -->
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="{{ asset('/') }}assets/vendors/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+        <!-- Core js -->
+        <script src="{{ asset('/') }}assets/js/core.js"></script>
+    <!-- End js -->
