@@ -54,6 +54,8 @@ Route::group(["middleware" => ['auth', 'checkuserrole:pelanggan']], function () 
     Route::controller(OrderController::class)->group(function() {
         Route::get('/order', 'index')->name('order.index');
         Route::get('/order/detailCheckout/{param}', 'detailCheckout')->name('order.detailCheckout');
+        Route::get('/coba', 'coba')->name('order.coba');
+
     });
 });
 

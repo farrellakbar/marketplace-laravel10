@@ -33,7 +33,7 @@
                                     <th>Foto</th>
                                     <th>Nama Produk</th>
                                     <th>Jumlah</th>
-                                    <th>TOTAL</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,7 +41,7 @@
                                     <tr>
                                         <td class="product-item-img"><img src="{{ asset('storage/produk/'.$produk->dokumen->filename) }}" alt=""></td>
                                         <td class="product-item-name">{{$produk->name}}</td>
-                                        <td class="product-price">Rp. {{$produk->pivot->quantity}}</td>
+                                        <td class="product-price">{{$produk->pivot->quantity}}</td>
                                         <td class="product-price">Rp. {{$produk->pivot->sub_total}}</td>
                                     </tr>
                                 @endforeach
@@ -60,8 +60,12 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="form-group">
-                            <button class="btn btn-primary btnhover" type="button">Bayar Sekarang</button>
+                        <div class="form-group" id='btnChange'>
+                            @if ($snapToken != null)
+                                <button id="pay-button" class="btn btn-danger btnhover" type="button">Bayar Sekarang</button>
+                            @else
+                                <button id="" class="btn btn-success btnhover disabled" type="button">Lunas</button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -78,5 +82,37 @@
 
     });
 </script>
+{{-- MIDTRANS --}}
+    @if ($snapToken != null)
+        <script type="text/javascript">
+            // For example trigger on button clicked, or any time you need
+            var payButton = document.getElementById('pay-button');
+            payButton.addEventListener('click', function () {
+                // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token.
+                // Also, use the embedId that you defined in the div above, here.
+                window.snap.pay('{{$snapToken}}', {
+                    // embedId: 'snap-container',
+                    onSuccess: function (result) {
+                        /* You may add your own implementation here */
+                        alert("payment success!");
+                        $('#btnChange').html('<button id="" class="btn btn-success btnhover disabled" type="button">Lunas</button>');
+                        console.log(result);
+                    },
+                    onPending: function (result) {
+                        /* You may add your own implementation here */
+                        alert("wating your payment!"); console.log(result);
+                    },
+                    onError: function (result) {
+                        /* You may add your own implementation here */
+                        alert("payment failed!"); console.log(result);
+                    },
+                    onClose: function () {
+                        /* You may add your own implementation here */
+                        alert('you closed the popup without finishing the payment');
+                    }
+                });
+            });
+        </script>
+    @endif
 @endsection
 

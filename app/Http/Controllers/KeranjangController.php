@@ -108,18 +108,19 @@ class KeranjangController extends Controller
             DB::beginTransaction();
 
             $user = User::find(auth()->user()->id);
-            $total = $user->produks()->sum(DB::raw('harga * quantity'));
+            $total = $user->produks()->wherePivot('order_id', null)->sum(DB::raw('harga * quantity'));
 
             $order = new Order();
             $order->total_harga = $total;
             $order->save();
-            $user->produks()->updateExistingPivot($user->produks()->pluck('produk_id'), ['status' => 'checkout']);
-            $user->produks()->updateExistingPivot($user->produks()->pluck('produk_id'), ['order_id' => $order->id]);
+            $user->produks()->wherePivot('order_id', null)->updateExistingPivot($user->produks()->pluck('produk_id'), ['status' => 'checkout']);
+            $user->produks()->wherePivot('order_id', null)->updateExistingPivot($user->produks()->pluck('produk_id'), ['order_id' => $order->id]);
 
             DB::commit();
             return response()->json([
                 'title' => 'Success!',
                 'message' => 'User has checkout product.',
+                'id' => encrypt( $order->id),
             ], 200);
         } catch (\Exception $e) {
             DB::rollback();
