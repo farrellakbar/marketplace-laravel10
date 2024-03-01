@@ -66,7 +66,7 @@ class KeranjangController extends Controller
             $user = User::find(auth()->user()->id);
             $sub_total = $request->quantity * $produk->harga;
 
-            $user->produks()->updateExistingPivot($produk_id, ['quantity' => $request->quantity, 'sub_total' => $sub_total]);
+            $user->produks()->wherePivot('order_id', null)->updateExistingPivot($produk_id, ['quantity' => $request->quantity, 'sub_total' => $sub_total]);
 
             DB::commit();
             return response()->json([
@@ -88,7 +88,7 @@ class KeranjangController extends Controller
             DB::beginTransaction();
             $user = User::find(auth()->user()->id);
 
-            $user->produks()->detach($param);
+            $user->produks()->wherePivot('order_id', null)->detach($param);
             DB::commit();
             return response()->json([
                 'title' => 'Success!',
@@ -107,17 +107,40 @@ class KeranjangController extends Controller
         try {
             DB::beginTransaction();
 
+            // $user = User::find(auth()->user()->id);
+            // $total = $user->produks()->wherePivot('order_id', null)->sum(DB::raw('harga * quantity'));
+            // $order = new Order();
+            // $order->total_harga = $total;
+            // $order->save();
+            // $user->produks()->wherePivot('order_id', null)->updateExistingPivot($user->produks()->pluck('produk_id'), ['status' => 'checkout']);
+            // $user->produks()->wherePivot('order_id', null)->updateExistingPivot($user->produks()->pluck('produk_id'), ['order_id' => $order->id]);
+            /////////////////////////////////////////////////////////////////////////
             $user = User::find(auth()->user()->id);
             $total = $user->produks()->wherePivot('order_id', null)->sum(DB::raw('harga * quantity'));
-
             $order = new Order();
             $order->total_harga = $total;
             $order->save();
+            $produkPivot = $user->produks()->wherePivot('order_id', null)->withPivot('quantity')->get();
             $user->produks()->wherePivot('order_id', null)->updateExistingPivot($user->produks()->pluck('produk_id'), ['status' => 'checkout']);
             $user->produks()->wherePivot('order_id', null)->updateExistingPivot($user->produks()->pluck('produk_id'), ['order_id' => $order->id]);
+            foreach ($produkPivot as $produk) {
+                if ($produk->stok >= $produk->pivot->quantity) {
+                    $produk->stok -= $produk->pivot->quantity;
+                    $produk->save();
+                }
+                else {
+                    DB::rollback();
+                    return response()->json([
+                        'icon' => 'error',
+                        'title' => 'Gagal!',
+                        'message' => $produk->name.' stok yang tersedia tidak tercukupi.',
+                    ], 200);
+                }
 
+            }
             DB::commit();
             return response()->json([
+                'icon' => 'success',
                 'title' => 'Success!',
                 'message' => 'User has checkout product.',
                 'id' => encrypt( $order->id),
@@ -125,6 +148,7 @@ class KeranjangController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
+                'icon' => 'error',
                 'title' => 'Failed!',
                 'message' => 'Data processing failure, '. $e->getMessage()
             ], 500);

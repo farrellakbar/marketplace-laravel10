@@ -183,12 +183,14 @@
                         type: 'POST',
                         success: function(data) {
                             swal({
-                                type: 'success',
+                                type: data.icon,
                                 title: data.title,
                                 text: data.message,
                                 confirmButtonClass: 'btn btn-success',
                             }).then(function () {
-                                window.location.href = "{{ route('order.detailCheckout', ':id') }}".replace(':id', data.id);
+                                if(data.icon == 'success'){
+                                    window.location.href = "{{ route('order.detailCheckout', ':id') }}".replace(':id', data.id);
+                                }
                             });
                         },
                         error: function(xhr, status, error) {
